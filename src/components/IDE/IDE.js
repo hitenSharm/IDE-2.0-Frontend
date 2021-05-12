@@ -12,6 +12,8 @@ import "ace-builds/src-noconflict/theme-solarized_dark";
 import { useDispatch, useSelector } from "react-redux";
 import { changeCode, changeLang } from "../../actions";
 import { codeRun } from "../../api/api";
+import { NotificationContainer } from "react-notifications";
+import createNotification from "../notifications";
 
 const { Option } = Select;
 
@@ -22,6 +24,7 @@ const IDE = () => {
 
   const [langMode,setLangMode]=useState(langIde == null ? "python" : langIde);
   const [inputVal,setInputVal]=useState();
+  const [outPutVal,setOutVal]=useState();
 
   function onChange(newValue) {
     dispatch(changeCode(newValue));
@@ -45,13 +48,18 @@ const IDE = () => {
   }
 
   const runCode = async () =>{
-    console.log("working?")
+    console.log("working...")
     let formData = new FormData();    
     formData.append("code",codeIde);
     formData.append("input",inputVal);
-    console.log(formData);
-    var ans = await codeRun(formData);
-    console.log(ans);
+    formData.append("lang",langIde);    
+    var ans = await codeRun(formData);       
+    if(ans.error && ans.error==="error"){
+      createNotification(ans.error,ans.message);
+    }
+    else{
+      setOutVal(ans); 
+    }
   }
 
   return (
@@ -86,6 +94,7 @@ const IDE = () => {
                 showGutter={false}
                 highlightActiveLine={false}
                 readOnly={true}
+                value={outPutVal}
                 placeholder="Output here"
                 editorProps={{ $blockScrolling: true }}
                 width="500px"
@@ -132,6 +141,7 @@ const IDE = () => {
           </Row>
         </Col>
       </Row>
+      <NotificationContainer/>
     </div>
   );
 };

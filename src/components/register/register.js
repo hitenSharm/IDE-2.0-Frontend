@@ -34,7 +34,7 @@ const Register = () => {
       details += " Redirecting to login page!";
     }
     createNotification(res.error, details);
-    if (res.error === "success") {
+    if (res.error == "success") {
       setTimeout(() => {
         history.push("/");
       }, 3000);
