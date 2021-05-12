@@ -7,7 +7,7 @@ import IDE from "./components/IDE/IDE";
 
 const App = () => {
   return (
-    <div>
+    <div style={{ backgroundColor: "#282c34" ,margin:"0" }}>
       <BrowserRouter>
         <Header />
         <Route path="/" exact component={Login}></Route>

@@ -27,8 +27,25 @@ const userDetails = (state = INITIAL_STATE, action) =>{
     }
 };
 
+const codeData = (state = null,action) =>{
+      if (action.type == "CHANGE_CODE") {
+        return action.payload;
+      }
+      return state; 
+}
+
+const langData = (state = null,action) =>{   
+    if(action.type=="CHANGE_LANG")
+    {
+        return action.payload;
+    }  
+    return state; 
+}
+
 const rootReducer = combineReducers({
-    userDetails
+    userDetails,
+    codeData,
+    langData
 });
 
 export default rootReducer;
