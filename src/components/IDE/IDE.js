@@ -14,6 +14,9 @@ import { changeCode, changeLang } from "../../actions";
 import { codeRun } from "../../api/api";
 import { NotificationContainer } from "react-notifications";
 import createNotification from "../notifications";
+// var Loader = require('react-loader');
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Loader from "react-loader-spinner";
 
 const { Option } = Select;
 
@@ -21,7 +24,7 @@ const IDE = () => {
   const dispatch = useDispatch();
   const codeIde = useSelector((state) => state.codeData);
   const langIde = useSelector((state) => state.langData);
-
+  const [loadingState,setLoadingState]=useState(true);
   const [langMode,setLangMode]=useState(langIde == null ? "python" : langIde);
   const [inputVal,setInputVal]=useState();
   const [outPutVal,setOutVal]=useState();
@@ -49,6 +52,7 @@ const IDE = () => {
 
   const runCode = async () =>{
     console.log("working...")
+    setLoadingState(false);
     let formData = new FormData();    
     formData.append("code",codeIde);
     formData.append("input",inputVal);
@@ -58,12 +62,23 @@ const IDE = () => {
       createNotification(ans.error,ans.message);
     }
     else{
-      setOutVal(ans); 
+      setOutVal(ans.toString()); 
     }
+    setLoadingState(true);
   }
 
   return (
     <div>
+      <div style={{display:"flex",justifyContent:"center"}}>
+      {!loadingState ? (
+        <Loader
+          type="MutatingDots"
+          color="#00BFFF"
+          height={100}
+          width={100}          
+        />
+      ) : null}
+      </div>
       <Row>
         <Col>
           <AceEditor
@@ -117,12 +132,16 @@ const IDE = () => {
                 width="500px"
                 height="200px"
                 value={inputVal}
-                onChange={(val)=>setInputVal(val)}
+                onChange={(val) => setInputVal(val)}
               />
-              <Button type="primary" style={{ margin: "0.5em" }} onClick={(e)=>{
-                e.preventDefault();
-                runCode();
-              }}>
+              <Button
+                type="primary"
+                style={{ margin: "0.5em" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  runCode();
+                }}
+              >
                 Compile Code
               </Button>
               <Button type="primary" style={{ margin: "1em" }}>
@@ -141,7 +160,7 @@ const IDE = () => {
           </Row>
         </Col>
       </Row>
-      <NotificationContainer/>
+      <NotificationContainer />
     </div>
   );
 };
