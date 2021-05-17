@@ -2,6 +2,7 @@ import axios from "axios";
 
 const baseUrlAccount = "http://localhost:3000/api/user/";
 const baseUrlCode = "http://localhost:3000/coding/";
+const saveCodeUrl = "http://localhost:3000/codesave/save";
 
 const config = {
   headers: {
@@ -31,6 +32,22 @@ export const codeRun = async (formData) => {
   var res;
   const url = baseUrlCode + "coderunner";
   await axios.post(url, formData, config).then((resp) => {
+    res = resp.data;
+    // console.log(resp);
+  });
+  return res;
+};
+
+export const saveCode = async (formData, tokenValue) => {  
+  var res;
+  var configJWT = {
+    headers: {
+      "Content-type": "application/json",
+      "auth-token": tokenValue,
+    },
+  };
+
+  await axios.post(saveCodeUrl, formData, configJWT).then((resp) => {
     res = resp.data;
     console.log(resp);
   });
