@@ -256,7 +256,7 @@ const IDE = () => {
               >
                 <Option value="C++">C++</Option>
                 <Option value="Python">Python</Option>
-                <Option value="Javascript">Javascript</Option>
+                {/* <Option value="Javascript">Javascript</Option> */}
               </Select>
             </Col>
           </Row>

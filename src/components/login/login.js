@@ -56,7 +56,7 @@ const Login = () => {
     <div className="Login">
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
-          <Form.Label>Email</Form.Label>
+          <Form.Label style={{color:"ghostwhite"}}>Email</Form.Label>
           <Form.Control
             autoFocus
             type="email"
@@ -65,7 +65,7 @@ const Login = () => {
           />
         </Form.Group>
         <Form.Group size="lg" controlId="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Label style={{color:"ghostwhite"}}>Password</Form.Label>
           <Form.Control
             type="password"
             value={password}
