@@ -4,6 +4,7 @@ import Login from "./components/login/login";
 import Header from "./components/header";
 import Register from "./components/register/register";
 import IDE from "./components/IDE/IDE";
+import AllCodes from "./components/allCodes/allcodes";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/" exact component={Login}></Route>
         <Route path="/signup" exact component={Register}></Route>
         <Route path="/ide" exact component={IDE}></Route>
+        <Route path="/allcodes" exact component={AllCodes}></Route>
       </BrowserRouter>
     </div>
   );
