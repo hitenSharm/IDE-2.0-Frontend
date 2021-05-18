@@ -6,6 +6,11 @@ const INITIAL_STATE={
     token:null
 };
 
+const CODE_DEFAULT={
+    metadata:[],
+    isDataInitialized:false
+}
+
 const userDetails = (state = INITIAL_STATE, action) =>{    
     switch (action.type) {
         case 'LOGGING_IN':
@@ -42,10 +47,29 @@ const langData = (state = null,action) =>{
     return state; 
 }
 
+const codesInitial = (state=CODE_DEFAULT,action) =>{
+    switch (action.type) {
+        case "DATA_INITIALIZED":
+          return {
+            ...state,
+            metadata: action.metadata,
+            isDataInitialized: true
+          };
+        case "SAVING_CODE":
+          return{
+              ...state,
+              metadata: [...state.metadata , action.payload]
+          }
+        default:
+            return state;
+      }
+}
+
 const rootReducer = combineReducers({
     userDetails,
     codeData,
-    langData
+    langData,
+    codesInitial
 });
 
 export default rootReducer;

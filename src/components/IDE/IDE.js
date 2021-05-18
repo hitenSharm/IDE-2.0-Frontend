@@ -10,7 +10,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/theme-solarized_dark";
 import { useDispatch, useSelector } from "react-redux";
-import { changeCode, changeLang } from "../../actions";
+import { changeCode, changeLang, saveCodeRedux } from "../../actions";
 import { codeRun, saveCode } from "../../api/api";
 import { NotificationContainer } from "react-notifications";
 import createNotification from "../notifications";
@@ -109,12 +109,18 @@ const IDE = () => {
 
   const saveCodeForDb = async () => {
     setIsOpen(false); 
-    console.log("saving!!");
+    console.log("saving!!");    
     setLoadingState(false);
     let formData = new FormData();
     formData.append("code", codeIde);
     formData.append("lang", langIde);
     formData.append("name", codeName);
+    var tempCode={
+      code:codeIde,
+      lang:langIde,
+      name:codeName
+    }
+    dispatch(saveCodeRedux(tempCode))
     var saving = await saveCode(formData, jwtToken);
     if (saving.error && saving.error === "error") {
       createNotification(saving.error, saving.message);

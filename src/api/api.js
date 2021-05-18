@@ -3,6 +3,7 @@ import axios from "axios";
 const baseUrlAccount = "http://localhost:3000/api/user/";
 const baseUrlCode = "http://localhost:3000/coding/";
 const saveCodeUrl = "http://localhost:3000/codesave/save";
+const showCodesUrl = "http://localhost:3000/seeCodes/show";
 
 const config = {
   headers: {
@@ -38,7 +39,7 @@ export const codeRun = async (formData) => {
   return res;
 };
 
-export const saveCode = async (formData, tokenValue) => {  
+export const saveCode = async (formData, tokenValue) => {
   var res;
   var configJWT = {
     headers: {
@@ -49,7 +50,23 @@ export const saveCode = async (formData, tokenValue) => {
 
   await axios.post(saveCodeUrl, formData, configJWT).then((resp) => {
     res = resp.data;
-    console.log(resp);
+    // console.log(resp);
+  });
+  return res;
+};
+
+export const showCodes = async (tokenValue) => {
+  var res;
+  var configJWT = {
+    headers: {
+      "Content-type": "application/json",
+      "auth-token": tokenValue,
+    },
+  };
+  await axios.get(showCodesUrl, configJWT).then((resp) => {
+    console.log("recieved");
+    res = resp.data;
+    // console.log(res);
   });
   return res;
 };

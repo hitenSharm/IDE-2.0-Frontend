@@ -9,9 +9,8 @@ import { Link,useHistory } from "react-router-dom";
 import { loginUser } from "../../api/api";
 import { NotificationContainer } from "react-notifications";
 import createNotification from "../notifications";
-import { useDispatch } from "react-redux";
-import { loggingIn } from "../../actions";
-
+import { useDispatch,useSelector } from "react-redux";
+import { getInitalData, loggingIn } from "../../actions";
 
 const Login = () => {
 
@@ -19,13 +18,14 @@ const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const jwtToken = useSelector((state) => state.userDetails.token);
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
 
   const sendToRedux = (obj) =>{
-    dispatch(loggingIn(obj));
+    dispatch(loggingIn(obj));    
   }
 
   async function handleSubmit(event) {
@@ -39,14 +39,15 @@ const Login = () => {
     createNotification(res.error, details);
     
     if (res.error === "success") {
+      var obj={
+        name:res.name,
+        email:res.email,
+        token:res.token
+      }
+      sendToRedux(obj);
+      dispatch(getInitalData(obj.token));      
       setTimeout(() => {
-        history.push("/ide");    
-        var obj={
-          name:res.name,
-          email:res.email,
-          token:res.token
-        }
-        sendToRedux(obj);    
+        history.push("/ide");                
       }, 3000);
     }
 
