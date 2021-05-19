@@ -11,34 +11,25 @@ import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/theme-solarized_dark";
 import { useDispatch, useSelector } from "react-redux";
 import { changeCode, changeLang, saveCodeRedux } from "../../actions";
-import { codeRun, saveCode } from "../../api/api";
+import { codeRun, updateCode } from "../../api/api";
 import { NotificationContainer } from "react-notifications";
 import createNotification from "../notifications";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from "react-loader-spinner";
-import {CloseOutlined} from '@ant-design/icons';
-import Modal from "react-modal";
+import { useHistory } from "react-router-dom";
 
 const { Option } = Select;
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "#29293d",
-  },
-};
-
-const IDE = () => {
+const EditIDE = (props) => {
+  
+  let history = useHistory();
   const dispatch = useDispatch();
   const codeIde = useSelector((state) => state.codeData);
   const langIde = useSelector((state) => state.langData);
   const userLog = useSelector((state) => state.userDetails.name);
   const jwtToken = useSelector((state) => state.userDetails.token);
+  const isEditMode = useSelector((state)=>state.editModeRed);
+  const editCodeName = useSelector((state)=>state.editCodeFileName);
 
   const [disableSave, setDisableSave] = useState(false);
   const [loadingState, setLoadingState] = useState(true);
@@ -46,28 +37,12 @@ const IDE = () => {
     langIde == null ? "python" : langIde
   );
   const [inputVal, setInputVal] = useState();
-  const [outPutVal, setOutVal] = useState();
-  const [codeName, setCodeName] = useState();
-
-  var subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = "ghostwhite";
-  }
-
-  function closeModal() {
-    setIsOpen(false);    
-  }
+  const [outPutVal, setOutVal] = useState();    
 
   useEffect(() => {
     if (userLog) {
       setDisableSave(false);
-    } else setDisableSave(true);
+    } else setDisableSave(true);    
   }, [userLog]);  
 
   function onChange(newValue) {
@@ -107,20 +82,19 @@ const IDE = () => {
     setLoadingState(true);
   };
 
-  const saveCodeForDb = async () => {
-    setIsOpen(false); 
+  const updateCodeForDb = async () => {    
     console.log("saving!!");    
     setLoadingState(false);
     let formData = new FormData();
     formData.append("code", codeIde);
     formData.append("lang", langIde);
-    formData.append("name", codeName);
+    formData.append("name", editCodeName);
     var tempCode={
       code:codeIde,
       lang:langIde,
-      name:codeName
+      name:editCodeName
     }    
-    var saving = await saveCode(formData, jwtToken);
+    var saving = await updateCode(formData, jwtToken);
     if (saving.error && saving.error === "error") {
       createNotification(saving.error, saving.message);
     } else {
@@ -129,9 +103,9 @@ const IDE = () => {
     }
     setLoadingState(true);
   };
-
   return (
-    <div>
+    <div style={{ textAlign: "center" }}>
+      {isEditMode && editCodeName ?<div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {!loadingState ? (
           <Loader
@@ -143,38 +117,7 @@ const IDE = () => {
         ) : null}
       </div>
       <Row>
-        <Col>
-          <div>
-            {/* <button onClick={openModal}>Open Modal</button> */}
-            <Modal
-              isOpen={modalIsOpen}
-              onAfterOpen={afterOpenModal}
-              onRequestClose={closeModal}
-              style={customStyles}
-              contentLabel="Code Details"
-            >
-              <Row>
-                <Col style={{ margin: "1em" }}>
-                  <h2
-                    ref={(_subtitle) => (subtitle = _subtitle)}
-                    style={{ color: "ghostwhite" }}
-                  >
-                    Save Code
-                  </h2>
-                </Col>
-                <Col>
-                  <Button onClick={closeModal} type="primary">
-                    <CloseOutlined />
-                  </Button>
-                </Col>
-              </Row>
-              <div style={{ color: "ghostwhite" }}>Type Name</div>
-              <form>
-                <input onChange={(e)=>setCodeName(e.target.value)} />
-                <Button type="primary" onClick={(e)=>{saveCodeForDb()}}>Save Code!</Button>
-              </form>
-            </Modal>
-          </div>
+        <Col>          
           <AceEditor
             mode={langMode}
             theme="monokai"
@@ -244,7 +187,7 @@ const IDE = () => {
                 disabled={disableSave}
                 onClick={(e) => {
                   e.preventDefault();                  
-                  openModal();
+                  updateCodeForDb();                  
                 }}
               >
                 Save Code
@@ -262,9 +205,24 @@ const IDE = () => {
           </Row>
         </Col>
       </Row>
+      <h3 style={{color:"ghostwhite"}}>File : {editCodeName}</h3>
       <NotificationContainer />
+    </div> : (
+        <h1
+          style={{
+            color: "ghostwhite",
+            fontSize: "5.5em",
+            fontFamily: "monospace",
+          }}
+        >
+          Sending to Login
+          {history.push("/")}
+        </h1>
+      )}
     </div>
   );
 };
 
-export default IDE;
+export default EditIDE;
+
+

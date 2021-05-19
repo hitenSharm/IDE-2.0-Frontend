@@ -7,21 +7,34 @@ const AllCodes = () => {
   const jwtToken = useSelector((state) => state.userDetails.token);
   const codes= useSelector((state) => state.codesInitial.metadata);
   const [isloggedIn, setLoggedIn] = useState(false);
+  
 
   useEffect(() => {
     if (jwtToken) setLoggedIn(true);
     else setLoggedIn(false);
   });
 
-  const mapCodes = () =>{      
-      return codes.map((code)=>{
-          console.log(code.lang);
+  const mapCodes = () =>{   
+      if(typeof codes !=='undefined')   
+      return codes.map((code)=>{          
           return (        
               <Col style={{ margin: "0.5em" }}>
-                <CodeCard name={code.name} lang={code.lang} />
+                <CodeCard name={code.name} lang={code.lang} realCode={code.codeData || code.code} />
               </Col>            
           );
       })
+      else
+      {
+        return <h1
+        style={{
+          color: "ghostwhite",
+          fontSize: "6.5em",
+          fontFamily: "cursive",
+        }}
+      >
+        No codes
+      </h1>
+      }
   }
 
   return (

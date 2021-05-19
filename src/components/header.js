@@ -3,7 +3,7 @@ import { Row, Col, Menu, Button } from "antd";
 import "antd/dist/antd.css";
 import { Link } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
-import { loggingOut } from "../actions";
+import { loggingOut ,editCodeName ,editModeOff,removeCode,removeIdeCode } from "../actions";
 
 const style = {
   color: "white",
@@ -33,6 +33,10 @@ const Header = () => {
 
   const logout = () =>{
     dispatch(loggingOut());
+    dispatch(removeCode());
+    dispatch(editModeOff());
+    dispatch(editCodeName(""));
+    dispatch(removeIdeCode("#code here"));
     setIsLoggedIn(false);
   }
 

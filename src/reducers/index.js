@@ -32,11 +32,15 @@ const userDetails = (state = INITIAL_STATE, action) =>{
     }
 };
 
-const codeData = (state = null,action) =>{
-      if (action.type == "CHANGE_CODE") {
-        return action.payload;
+const codeData = (state = null,action) =>{      
+      switch (action.type) {
+          case "CHANGE_CODE":
+              return action.payload;              
+          case "REMOVE_IDE_CODE":
+              return action.payload;
+          default:
+            return state;
       }
-      return state; 
 }
 
 const langData = (state = null,action) =>{   
@@ -60,16 +64,38 @@ const codesInitial = (state=CODE_DEFAULT,action) =>{
               ...state,
               metadata: [...state.metadata , action.payload]
           }
+        case "REMOVE_CODES":
+            return [];
         default:
             return state;
       }
+}
+
+const editModeRed = (state = false,action) =>{
+    if(action.type==="EDIT_MODE_OFF")
+    return false;
+
+    if(action.type==="EDIT_MODE_ON")
+    return true;
+
+    return state;
+}
+
+const editCodeFileName = (state = null,action)=>{
+    if(action.type==="SET_EDIT_NAME")
+    {
+        return action.payload;
+    }
+    return state;
 }
 
 const rootReducer = combineReducers({
     userDetails,
     codeData,
     langData,
-    codesInitial
+    codesInitial,
+    editModeRed,
+    editCodeFileName
 });
 
 export default rootReducer;
