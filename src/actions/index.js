@@ -77,4 +77,11 @@ export const removeIdeCode = (data) =>{
     }
 }
 
+export const updateCodes = (data)=>{
+    return{
+        type:"UPDATE_STORE",
+        payload:data
+    }
+}
+
   

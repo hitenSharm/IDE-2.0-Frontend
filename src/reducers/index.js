@@ -51,25 +51,35 @@ const langData = (state = null,action) =>{
     return state; 
 }
 
-const codesInitial = (state=CODE_DEFAULT,action) =>{
-    switch (action.type) {
-        case "DATA_INITIALIZED":
-          return {
-            ...state,
-            metadata: action.metadata,
-            isDataInitialized: true
-          };
-        case "SAVING_CODE":
-          return{
-              ...state,
-              metadata: [...state.metadata , action.payload]
-          }
-        case "REMOVE_CODES":
-            return [];
-        default:
-            return state;
-      }
-}
+const codesInitial = (state = CODE_DEFAULT, action) => {
+  switch (action.type) {
+    case "DATA_INITIALIZED":
+      return {
+        ...state,
+        metadata: action.metadata,
+        isDataInitialized: true,
+      };
+    case "SAVING_CODE":
+      return {
+        ...state,
+        metadata: [...state.metadata, action.payload],
+      };
+    case "UPDATE_STORE":
+      return {
+        ...state,
+        metadata: state.metadata.map((content) => {
+          return (
+            content.name===action.payload.name ? {...content, lang:action.payload.lang, codeData:action.payload.code} : content
+            // console.log(content)
+          );
+        }),
+      };
+    case "REMOVE_CODES":
+      return [];
+    default:
+      return state;
+  }
+};
 
 const editModeRed = (state = false,action) =>{
     if(action.type==="EDIT_MODE_OFF")
@@ -89,13 +99,23 @@ const editCodeFileName = (state = null,action)=>{
     return state;
 }
 
+// const updateCodesStore = (state=CODE_DEFAULT,action)=>{
+//     console.log(state);
+//     switch (action.type) {
+                    
+//         default:
+//             break;
+//     }
+//     return state;
+// }
+
 const rootReducer = combineReducers({
     userDetails,
     codeData,
     langData,
     codesInitial,
     editModeRed,
-    editCodeFileName
+    editCodeFileName    
 });
 
 export default rootReducer;

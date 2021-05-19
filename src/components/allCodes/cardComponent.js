@@ -21,8 +21,7 @@ const CodeCard = (props) => {
       "https://www.acsce.edu.in/blog/wp-content/uploads/2017/03/python-logo.jpg";
   }
 
-  const dispatchActions = () =>{
-    console.log(props);
+  const dispatchActions = () =>{    
     dispatch(editCodeName(props.name));
     dispatch(editModeOn());    
     dispatch(changeCode(props.realCode));    

@@ -10,7 +10,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/theme-solarized_dark";
 import { useDispatch, useSelector } from "react-redux";
-import { changeCode, changeLang, saveCodeRedux } from "../../actions";
+import { changeCode, changeLang, updateCodes } from "../../actions";
 import { codeRun, updateCode } from "../../api/api";
 import { NotificationContainer } from "react-notifications";
 import createNotification from "../notifications";
@@ -98,8 +98,8 @@ const EditIDE = (props) => {
     if (saving.error && saving.error === "error") {
       createNotification(saving.error, saving.message);
     } else {
-      createNotification(saving.error, saving.message);
-      dispatch(saveCodeRedux(tempCode))
+      createNotification(saving.error, saving.message);      
+      dispatch(updateCodes(tempCode));
     }
     setLoadingState(true);
   };
